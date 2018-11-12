@@ -1,0 +1,17 @@
+
+select a.orderid, b.companyname from orders a 
+right join customers b
+on a.customerid=b.customerid order by a.orderid;
+
+select a.orderid, b.companyname from orders a 
+right join customers b
+on a.customerid=b.customerid where a.orderid is null;
+
+select a.orderid, b.productname
+from order_details a right join products b
+on a.productid=b.productid order by a.orderid;
+
+
+select a.orderid, b.productname
+from order_details a right join products b
+on a.productid=b.productid where a.productid is null;

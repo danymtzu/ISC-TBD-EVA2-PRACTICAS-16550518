@@ -1,0 +1,25 @@
+select b.productname, (a.unitprice * a.quantity) as subtotal 
+from order_details a 
+inner join products b on a.productid = b.productid;
+
+select b.productname, (a.unitprice * a.quantity) as subtotal 
+from order_details a 
+inner join products b on a.productid = b.productid
+group by a.productid;
+
+select sum(quantity * unitprice) as total from order_details 
+where productid = 1;
+
+select sum(quantity * unitprice) from order_details;
+
+select c.companyname, sum(a.unitprice * a.quantity) as total
+from order_details a
+inner join orders b on a.orderid=b.orderid
+inner join customers c on b.customerid = c.customerid 
+group by c.customerid;
+
+select b.productname, sum(a.unitprice * a.quantity) as total 
+from order_details a 
+inner join products b on a.productid = b.productid
+group by a.productid
+having sum(a.unitprice * a.quantity) > 10000;

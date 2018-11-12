@@ -1,0 +1,154 @@
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': ****
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 22
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > \use evaluacion_2
+Default schema set to `evaluacion_2`.
+Fetching table and column names from `evaluacion_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL >
+                                            ...                                             ... select * from tablaa A right join tablab B on a.nombre=b.nombre where a.nomb
+                                            ...                                             ... select * from tablaa A right join tablab B on a.nombre=b.nombre where a.nomb
+                                            ...
+                                            ...
+                                            ... ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '... union' at line 2
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaaa A right join tablab B on a.nombre=b.nombre where a.nombre=b.nombre
+                                            ... union
+                                            ... select * from tablaa A left join tablab B on a.nombre=b.nombre where b.nombre is null ;
+ERROR: 1146 (42S02): Table 'evaluacion_2.tablaaa' doesn't exist
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaaa A right join tablab B on a.nombre=b.nombre where a.nombre=b.nombre union select * from tablaa A left j
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL >
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL >
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right excluding inner join tablab B on a.nombre=b.nombre
+                                            ... union all
+                                            ... select * from tablaa A left excluding inner join tablab B on a.nombre=b.nombre
+                                            ... union all
+                                            ... select * from tablaa A inner join tablab B on a.nombre=b.nombre;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'excluding inner join tablab B on a.nombre=b.nombre
+union all
+select * from tabla' at line 1
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right inner join tablab B on a.nombre=b.nombre union all select * from tablaa A left inner join tablab B on a.nombre=b.nombre union all  select * from tablaa A inner join tablab B on a.nombre=b.nombre;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'inner join tablab B on a.nombre=b.nombre union all select * from tablaa A left i' at line 1
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre=b.nombre union all select * from tablaa A left join tablab B on a.nombre=b.nombre union all  select * from tablaa A inner join tablab B on a.nombre=b.nombre;
++------+--------+------+--------+
+| ind  | nombre | ind  | nombre |
++------+--------+------+--------+
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+| NULL | NULL   |    1 | X      |
+| NULL | NULL   |    2 | Y      |
+| NULL | NULL   |    3 | Z      |
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+|    3 | C      | NULL | NULL   |
+|    4 | D      | NULL | NULL   |
+|    5 | E      | NULL | NULL   |
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
++------+--------+------+--------+
+12 rows in set (0.0022 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre=b.nombre union all select * from tablaa A left join tablab B on a.nombre=b.nombre;
++------+--------+------+--------+
+| ind  | nombre | ind  | nombre |
++------+--------+------+--------+
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+| NULL | NULL   |    1 | X      |
+| NULL | NULL   |    2 | Y      |
+| NULL | NULL   |    3 | Z      |
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+|    3 | C      | NULL | NULL   |
+|    4 | D      | NULL | NULL   |
+|    5 | E      | NULL | NULL   |
++------+--------+------+--------+
+10 rows in set (0.0010 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre=b.nombre where a.nombre is null union all select * from tablaa A left join tablab B on a.nombre=b.nombre where b.nombre is null union all  select * from tablaa A inner join tablab B on a.nombre=b.nombre;
++------+--------+------+--------+
+| ind  | nombre | ind  | nombre |
++------+--------+------+--------+
+| NULL | NULL   |    1 | X      |
+| NULL | NULL   |    2 | Y      |
+| NULL | NULL   |    3 | Z      |
+|    3 | C      | NULL | NULL   |
+|    4 | D      | NULL | NULL   |
+|    5 | E      | NULL | NULL   |
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
++------+--------+------+--------+
+8 rows in set (0.0009 sec)
+                                                select * from tablaa A right join tablab B on a.nombre=b.nombre
+                                            ...   lect * from tablaa A right join tablab B on a.nombre=b.nombre where a.nombre is null union all select * from tablaa A left
+                                            ...  select * from tablaa A left join tablab B on a.nombre=b.nombre
+                                            ... select * from tablaa A right join tablab B on a.nombre=b.nomb select * from tablaa A left join tablab B on a.nombre=b.nombre
+                                            ... ;
++------+--------+------+--------+
+| ind  | nombre | ind  | nombre |
++------+--------+------+--------+
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+| NULL | NULL   |    1 | X      |
+| NULL | NULL   |    2 | Y      |
+| NULL | NULL   |    3 | Z      |
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+|    3 | C      | NULL | NULL   |
+|    4 | D      | NULL | NULL   |
+|    5 | E      | NULL | NULL   |
++------+--------+------+--------+
+10 rows in set (0.0010 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A
+                                            ... right join tablab B on a.nombre=b.nombre
+                                            ... union all
+                                            ... select * from tablaa A
+                                            ... left join tablab B on a.nombre= b.nombre
+                                            ... where b.nombre is null;
++------+--------+------+--------+
+| ind  | nombre | ind  | nombre |
++------+--------+------+--------+
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+| NULL | NULL   |    1 | X      |
+| NULL | NULL   |    2 | Y      |
+| NULL | NULL   |    3 | Z      |
+|    3 | C      | NULL | NULL   |
+|    4 | D      | NULL | NULL   |
+|    5 | E      | NULL | NULL   |
++------+--------+------+--------+
+8 rows in set (0.0009 sec)
+
+select a.orderid, b.CustomerID, b.companyname 
+from orders a right join customers b
+on a.customerid=b.customerid 
+union all
+select a.orderid,b.CustomerID , b.companyname 
+from orders a left join customers b
+on a.customerid=b.customerid where b.customerid is null;

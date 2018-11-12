@@ -1,0 +1,140 @@
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root @localhost
+\connect [-mx|--mysqlx|-mc|--mysql|-ma] <URI>
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': ****
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 19
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > \evaluacion_2
+                              ... ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\evaluacion_2' at line 1
+
+ MySQL  localhost:3306 ssl  SQL > \use evaluacion_2 ;
+\use <schema_name>
+
+ MySQL  localhost:3306 ssl  SQL > \use evaluacion_2
+Default schema set to `evaluacion_2`.
+Fetching table and column names from `evaluacion_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A
+                                            ... left join tablab B on a.nombre=b.nombre;
++-----+--------+------+--------+
+| ind | nombre | ind  | nombre |
++-----+--------+------+--------+
+|   1 | A      |    4 | A      |
+|   2 | B      |    5 | B      |
+|   3 | C      | NULL | NULL   |
+|   4 | D      | NULL | NULL   |
+|   5 | E      | NULL | NULL   |
++-----+--------+------+--------+
+5 rows in set (0.0110 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre=b.nombre;
++------+--------+-----+--------+
+| ind  | nombre | ind | nombre |
++------+--------+-----+--------+
+|    1 | A      |   4 | A      |
+|    2 | B      |   5 | B      |
+| NULL | NULL   |   1 | X      |
+| NULL | NULL   |   2 | Y      |
+| NULL | NULL   |   3 | Z      |
++------+--------+-----+--------+
+5 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre=b.nombre where A is null;
+ERROR: 1054 (42S22): Unknown column 'A' in 'where clause'
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre=b.nombre where a.nombre is null;
++------+--------+-----+--------+
+| ind  | nombre | ind | nombre |
++------+--------+-----+--------+
+| NULL | NULL   |   1 | X      |
+| NULL | NULL   |   2 | Y      |
+| NULL | NULL   |   3 | Z      |
++------+--------+-----+--------+
+3 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A left join tablab B on a.nombre=b.nombre where b.nombre is null;
++-----+--------+------+--------+
+| ind | nombre | ind  | nombre |
++-----+--------+------+--------+
+|   3 | C      | NULL | NULL   |
+|   4 | D      | NULL | NULL   |
+|   5 | E      | NULL | NULL   |
++-----+--------+------+--------+
+3 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A left join tablab B on a.nombre=b.nombre where b.nombre is null union where a.nombre is null;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where a.nombre is null' at line 1
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A left join tablab B on a.nombre=b.nombre where b.nombre is null
+                                            ... ;
++-----+--------+------+--------+
+| ind | nombre | ind  | nombre |
++-----+--------+------+--------+
+|   3 | C      | NULL | NULL   |
+|   4 | D      | NULL | NULL   |
+|   5 | E      | NULL | NULL   |
++-----+--------+------+--------+
+3 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A left join tablab B on a.nombre=b.nombre where b.nombre is null
+                                            ... union
+                                            ... select * from tablaa A right join tablab B on a.nombre=b.nombre where a.nombre is null;
++------+--------+------+--------+
+| ind  | nombre | ind  | nombre |
++------+--------+------+--------+
+|    3 | C      | NULL | NULL   |
+|    4 | D      | NULL | NULL   |
+|    5 | E      | NULL | NULL   |
+| NULL | NULL   |    1 | X      |
+| NULL | NULL   |    2 | Y      |
+| NULL | NULL   |    3 | Z      |
++------+--------+------+--------+
+6 rows in set (0.0091 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL >
+select a.orderid, b.productname
+from order_details a right join products b
+on a.productid=b.productid where a.productid is null
+union
+select a.orderid, b.productname
+from order_details a left join products b
+on a.productid=b.productid where b.productid is null;
+
+select a.orderid, a.CustomerID, b.companyname 
+from orders a right join customers b
+on a.customerid=b.customerid where a.CustomerID is null
+union
+select a.orderid,a.CustomerID , b.companyname 
+from orders a left join customers b
+on a.customerid=b.customerid where b.customerid is null;
+
+
+select a.orderid, a.CustomerID, b.companyname 
+from orders a right join customers b
+on a.customerid=b.customerid where a.CustomerID is null
+union all
+select a.orderid,a.CustomerID , b.companyname 
+from orders a left join customers b
+on a.customerid=b.customerid where b.customerid is null;
